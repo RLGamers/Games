@@ -14,8 +14,14 @@ class Game(ABC):
         self.State = initial_state
 
     def step(self):
+        '''
+        stops the game if there is winner and returns it
+        '''
         for player in self.players:
             player.move(self)
+            winner = self.victoryTest()
+            if winner is not None:
+                return winner
 
     @abstractmethod
     def advanceGameState(self, state):
@@ -25,6 +31,14 @@ class Game(ABC):
     def getSuccessorStates(self, action):
         pass
 
+    @abstractmethod
+    def victoryTest(self):
+        '''
+        Based on the current state, returns the winner of the game if there is one or returns None
+        '''
+        pass
+
     def play(self):
-        while not self.isDone:
-            self.step()
+        winner = None
+        while not self.isDone and winner is not None:
+            winner = self.step()
