@@ -1,14 +1,16 @@
-2PGame Class
-* Defines a set of Rules:
-    * For now, all games are alternating players
-    * GameState: What the board looks like now (e.g. 2D array for chess)
-    * Action: An action on GameState
+BASIC GeneralGame Outline
+
+Game Class
+    * For now, all games are repeating sequential players
+    * game_state: What the board looks like now (e.g. 2D array for chess)
+    * must implement each abstract method here in base classes
+    * run by calling run(debug=True/False) method once
+
+Action Class:
+    * An action on game_state
         * isValidAction(Action) method
-    * Agent1
-    * Agent2
-    * On each turn, calls one of the Agent's getTurn() methods, and then posts the result of the turn to all agents
 
 Agent Class
-* Can remember history of actions through post method
-* getTurn(GameState) : Action
-* postTurn(GameState, Action, ) : void
+    * Can remember history of board states through Game.game_history
+    * may also internally want to keep a list of ** actions **
+    * getNextAction(Game) : Action, this is the most important
