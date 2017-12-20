@@ -69,11 +69,16 @@ class Action:
 
 
 class Agent:
-    def __init__(self, id):
+    def __init__(self, id, args):
         self.id = id
+        self.initAgent(args)
 
     def __str__(self):
         return "P%d" % self.id
+
+    @abstractmethod
+    def initAgent(self, args):
+        pass
 
     @abstractmethod
     def getNextAction(self, game):

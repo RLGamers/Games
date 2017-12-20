@@ -1,4 +1,5 @@
 from GeneralGame import Game, Action, Agent
+import random 
 
 class Othello(Game):
 
@@ -93,5 +94,25 @@ class OthelloAction(Action):
         return valid and inRange
 
 
-class OthelloAgent(Agent):
-    pass
+class RandomOthelloAgent(Agent):
+
+    def initAgent(self, args):
+        pass
+
+    #just picks a random action
+    def getNextAction(self, game):
+        if not isinstance(game, Othello):
+            raise Exception("This agent is meant for Othello!")
+        else:
+            #count empty spots
+            lst = []
+            for i in range(game.N):
+                for j in range(game.N):
+                    if game.game_state[i][j] == 0:
+                        lst.append(i,j)
+
+            if len(lst) > 0:
+                pnt = lst[random.randint(0, len(lst)-1)]
+                return OthelloAction(self, {'ROW':pnt[0], 'COL':pnt[1], 'PLAYER':self.id})
+
+
