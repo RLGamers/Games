@@ -36,7 +36,7 @@ class Chess(Game):
 	def isTerminalState(self):
 		if not any(1 in row for row in self.game_state):
 			return 2
-		if not any(6 in row for row in self.game_state):
+		if not any(7 in row for row in self.game_state):
 			return 1
 
 	def takeAction(self, action):
@@ -114,9 +114,9 @@ class ChessAction(Action):
 			if abs(fr - tr) <= 1 and abs(fc - tc) <= 1:
 				return False
 		elif from_cell == 2 or from_cell == 8: # Queen
-			if fr == tr and not game.game_state[fr, min(fc, tc) + 1: max(fc, tc)].any():
+			if fr == tr and not np.any(game.game_state[fr, min(fc, tc) + 1: max(fc, tc)]):
 				return True
-			if fc == tc and not game.game_state[fc, min(fr, tr) + 1: max(fr, tr)].any():
+			if fc == tc and not np.any(game.game_state[min(fr, tr) + 1: max(fr, tr), fc]):
 				return True
 			row_dist = abs(fr - tr)
 			col_dist = abs(fc - tc)
@@ -133,9 +133,9 @@ class ChessAction(Action):
 						col += c_step
 				return True
 		elif from_cell == 3 or from_cell == 9: # Rook
-			if fr == tr and not game.game_state[fr, min(fc, tc) + 1: max(fc, tc)].any():
+			if fr == tr and not np.any(game.game_state[fr, min(fc, tc) + 1: max(fc, tc)]):
 				return True
-			if fc == tc and not game.game_state[fc, min(fr, tr) + 1: max(fr, tr)].any():
+			if fc == tc and not np.any(game.game_state[min(fr, tr) + 1: max(fr, tr), fc]):
 				return True
 		elif from_cell == 4 or from_cell == 10: # Bishop
 			row_dist = abs(fr - tr)
@@ -197,3 +197,12 @@ class RandomChessAgent(Agent):
 				if action.isValidAction(game):
 					validAction = True
 			return action
+
+
+if __name__ == "__main__":
+	game = Chess(None)
+	p1 = RandomChessAgent(1, None)
+	p2 = RandomChessAgent(2, None)
+	game.addPlayer(p1)
+	game.addPlayer(p2)
+	game.run(debug=True)

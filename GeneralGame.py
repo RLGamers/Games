@@ -45,13 +45,12 @@ class Game:
             for p in self.players:
                 if not self.isTerminalState():
                     action = p.getNextAction(self)
-                    if action.isValidAction(self):
-                        #called first to save the old version
-                        self.copyAndSave()
-                        #then take the action
-                        self.takeAction(action)
-                        if debug:
-                            self.printGame()
+                    while not action.isValidAction(self):
+                        action = p.getNextAction(self)
+                    self.copyAndSave()
+                    self.takeAction(action)
+                    if debug:
+                        self.printGame()
                 else:
                     gameOver = True
 
