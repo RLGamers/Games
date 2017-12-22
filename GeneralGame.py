@@ -40,18 +40,22 @@ class Game:
 
     # main running method
     def run(self, debug=False):
-        while not self.isTerminalState(self):
+        gameOver = False
+        while not gameOver:
             for p in self.players:
-                action = p.getNextAction(self, game)
-                if action.isValidAction(game):
-                    #called first to save the old version
-                    self.copyAndSave()
-                    #then take the action
-                    self.takeAction(action)
-                    if debug:
-                        self.printGame()
+                if not self.isTerminalState():
+                    action = p.getNextAction(self)
+                    if action.isValidAction(self):
+                        #called first to save the old version
+                        self.copyAndSave()
+                        #then take the action
+                        self.takeAction(action)
+                        if debug:
+                            self.printGame()
+                else:
+                    gameOver = True
 
-        print("Winner: %s" % self.players[self.isTerminalState(self) - 1])
+        print("Winner: %s" % self.players[self.isTerminalState() - 1])
                 
 
 class Action:
