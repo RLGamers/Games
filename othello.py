@@ -24,7 +24,7 @@ class Othello(Game):
                     cnt1 += 1
                 elif piece == 2:
                     cnt2 += 1
-                else
+                else:
                     return 'ERROR IN GAME_STATE TYPE'
 
         if cnt1 > cnt2:
@@ -36,50 +36,52 @@ class Othello(Game):
 
     #helper
     def propogate_point(self, val, func, initialPoint):
-        currpt = func(initialPoint)
+        currpt = func(initialPoint[0], initialPoint[1])
         found = False
         while 0 <= currpt[0] < self.N and 0 <= currpt[1] < self.N:
             if self.game_state[currpt[0]][currpt[1]] == val:
                 found = True
-            currpt = func(currpt)
+            elif self.game_state[currpt[0]][currpt[1]] == 0:
+                break
+            currpt = func(currpt[0], currpt[1])
 
         #if there is no terminating piece, don't do anything
         if not found:
             return
 
         #set all the pieces on that path to the right color
-        currpt = func(initialPoint)
+        currpt = func(initialPoint[0], initialPoint[1])
         while self.game_state[currpt[0]][currpt[1]] != val:
             self.game_state[currpt[0]][currpt[1]] = val
-            currpt = func(currpt)
+            currpt = func(currpt[0], currpt[1])
 
 
     def takeAction(self, action):
         self.game_state[action.row][action.col] = action.newVal
         #UP 
-        self.propogate_point(action.newVal, lambda r,c : r-1,c, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r-1,c), (action.row, action.col))
         #UP LEFT
-        self.propogate_point(action.newVal, lambda r,c : r-1,c-1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r-1,c-1), (action.row, action.col))
         #LEFT
-        self.propogate_point(action.newVal, lambda r,c : r,c-1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r,c-1), (action.row, action.col))
         #DOWN LEFT
-        self.propogate_point(action.newVal, lambda r,c : r+1,c-1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r+1,c-1), (action.row, action.col))
         #DOWN 
-        self.propogate_point(action.newVal, lambda r,c : r+1,c, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r+1,c), (action.row, action.col))
         #DOWN RIGHT
-        self.propogate_point(action.newVal, lambda r,c : r+1,c+1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r+1,c+1), (action.row, action.col))
         #RIGHT
-        self.propogate_point(action.newVal, lambda r,c : r,c+1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r,c+1), (action.row, action.col))
         # UP RIGHT
-        self.propogate_point(action.newVal, lambda r,c : r-1,c+1, (action.row, action.col))
+        self.propogate_point(action.newVal, lambda r,c : (r-1,c+1), (action.row, action.col))
 
     def printGame(self):
         for i in range(self.N):
-            print(" ---" * N)
-            row = "|" + " %d |" * N
-            print(row % self.game_state[i])
+            print(" ---" * self.N)
+            row = "|" + " %d |" * self.N
+            print(row % tuple(self.game_state[i]))
 
-        print(" ---" * N)
+        print(" ---" * self.N)
 
 
 class OthelloAction(Action):
@@ -109,10 +111,17 @@ class RandomOthelloAgent(Agent):
             for i in range(game.N):
                 for j in range(game.N):
                     if game.game_state[i][j] == 0:
-                        lst.append(i,j)
+                        lst.append((i,j))
 
             if len(lst) > 0:
                 pnt = lst[random.randint(0, len(lst)-1)]
                 return OthelloAction(self, {'ROW':pnt[0], 'COL':pnt[1], 'PLAYER':self.id})
 
 
+if __name__ == "__main__":
+    game = Othello({'N':5})
+    p1 = RandomOthelloAgent(1, None)
+    p2 = RandomOthelloAgent(2, None)
+    game.addPlayer(p1)
+    game.addPlayer(p2)
+    game.run(debug=True)

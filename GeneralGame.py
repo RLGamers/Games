@@ -37,7 +37,6 @@ class Game:
     def printGame(self):
         pass
 
-
     # main running method
     def run(self, debug=False):
         gameOver = False
@@ -86,5 +85,4 @@ class Agent:
     @abstractmethod
     def getNextAction(self, game):
         pass
-
 
